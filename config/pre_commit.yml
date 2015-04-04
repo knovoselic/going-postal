@@ -1,0 +1,15 @@
+---
+:checks_remove:
+- :closure
+- :migration
+:checks_add:
+- :ci
+- :coffeelint
+- :csslint
+- :gemfile_path
+- :jslint
+- :json
+- :rspec_focus
+- :rubocop
+- :scss_lint
+- :yaml
