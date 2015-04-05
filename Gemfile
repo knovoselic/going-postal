@@ -30,7 +30,6 @@ gem 'puma'
 gem 'mongoid'
 gem 'rubocop', require: false
 gem 'rubocop-rspec', require: false
-gem 'rspec-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution
@@ -41,5 +40,10 @@ group :development, :test do
   # in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
+  gem 'rspec-rails'
   gem 'better_errors'
+  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-stack_explorer'
 end
