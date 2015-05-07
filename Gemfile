@@ -30,6 +30,7 @@ gem 'puma'
 gem 'mongoid'
 gem 'rubocop', require: false
 gem 'rubocop-rspec', require: false
+gem 'devise'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution

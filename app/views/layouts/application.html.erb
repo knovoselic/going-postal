@@ -33,6 +33,16 @@
     </div>
   </nav>
   <div class="container" role="main">
+    <% unless notice.blank? %>
+      <div class="alert alert-info" role="alert">
+        <%= notice %>
+      </div>
+    <% end %>
+    <% unless alert.blank? %>
+      <div class="alert alert-danger" role="alert">
+        <%= alert %>
+      </div>
+    <% end %>
     <%= yield %>
   </div>
 </body>
