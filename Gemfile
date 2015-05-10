@@ -49,6 +49,8 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
-  gem 'guard'
+
+  gem 'spring-commands-rspec'
+  gem 'rb-fsevent' if `uname` =~ /Darwin/
   gem 'guard-rspec', require: false
 end
