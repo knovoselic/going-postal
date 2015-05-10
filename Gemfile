@@ -47,6 +47,8 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
+  gem 'mutant'
+  gem 'mutant-rspec'
 
   gem 'spring-commands-rspec'
   gem 'rb-fsevent' if `uname` =~ /Darwin/
