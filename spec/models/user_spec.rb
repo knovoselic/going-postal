@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User do
-  subject { build :user }
+  subject { build described_class }
 
   it 'has a valid factory' do
     expect(subject).to be_valid
