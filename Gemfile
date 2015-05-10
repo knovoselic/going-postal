@@ -41,7 +41,7 @@ group :development, :test do
   gem 'spring'
 
   gem 'rspec-rails'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', require: false
   gem 'better_errors'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'pry'
