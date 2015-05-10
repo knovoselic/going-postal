@@ -17,3 +17,9 @@ precompile_names = Dir[controllers_path].flat_map do |path|
   ["#{name}.js", "#{name}.css"]
 end
 Rails.application.config.assets.precompile += precompile_names
+
+devise_controllers = %w(sessions registrations passwords confirmations)
+devise_controllers.each do |name|
+  Rails.application.config.assets.precompile +=
+    ["devise/#{name}.js", "devise/#{name}.css"]
+end
