@@ -1,0 +1,53 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Going Postal</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="main.css" />
+  <!-- <link rel="stylesheet" href="filtered.css" /> -->
+</head>
+<body>
+  <ul id="container">
+    <li class="slide-in">
+      <div class="inner">
+        <h1>Welcome to Going Postal, your IoT post box.</h1>
+        <p>Please follow the instructions to setup your Going Postal device.</p>
+        <ul class="actions">
+          <li><a href="#" onClick='nextSlide();' class="button scrolly">Setup</a></li>
+        </ul>
+      </div>
+    </li>
+    <li id="setup">
+      <h1>Test2 test2</h1>
+      <ul class="actions">
+        <li><a href="#" onClick='nextSlide();' class="button">Next</a></li>
+      </ul>
+    </li>
+    <li id="setup1">
+      <h1>Test3 test3</h1>
+    </li>
+  </ul>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // initialize animations
+      document.getElementsByTagName("body")[0].classList.add('is-loading');
+      window.addEventListener('load', function() {
+        window.setTimeout(function() {
+          document.getElementsByTagName("body")[0].classList.remove('is-loading');
+        }, 250);
+      });
+    });
+
+    function nextSlide() {
+      var el = document.getElementsByClassName('slide-in')[0];
+      el.classList.remove('slide-in');
+      el.classList.add('slide-away');
+      el.nextElementSibling.classList.add('slide-in');
+
+      return false;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+#!/bin/bash
+uncss index.html | uglifycss > minified.css
