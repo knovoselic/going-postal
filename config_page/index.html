@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -6,8 +5,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="main.css" />
-  <link rel="stylesheet" href="loader.css" />
-  <!-- <link rel="stylesheet" href="filtered.css" /> -->
 </head>
 <body>
   <ul id="container">
@@ -16,7 +13,7 @@
         <h1>Welcome to Going Postal, your IoT post box.</h1>
         <p>Please follow the instructions to setup your Going Postal device.</p>
         <ul class="actions">
-          <li><a href="#" onClick='nextSlide();' class="button scrolly">Setup</a></li>
+          <li><a id="start-setup" class="button scrolly">Setup</a></li>
         </ul>
       </div>
     </li>
@@ -41,14 +38,13 @@
           </div>
           <div class="12u$ center">
             <ul class="actions">
-              <li><a type="submit" id="test-connection" class="button special" >Test connection</a></li>
+              <li><a id="test-connection" class="button special">Test connection</a></li>
             </ul>
           </div>
         </div>
       </form>
     </li>
     <li>
-      <!-- loader alternative http://codepen.io/manussakis/pen/VYgBVG -->
       <h1>Looking for internet connection…</h1>
       <div class="loro">
         <div class="circ"></div>
@@ -59,94 +55,10 @@
       </div>
     </li>
     <li>
-      <!-- loader alternative http://codepen.io/manussakis/pen/VYgBVG -->
       <h1>All done!</h1>
-      <p>Your device is now configured and fully working. It will automatically exit configuration mode.q</p>
+      <p>Your device is now configured and fully working. It will automatically exit configuration mode.</p>
     </li>
   </ul>
-  <script>
-    document.addEventListener('DOMContentLoaded', function(){
-      /*initialize animations*/
-      document.getElementsByTagName("body")[0].classList.add('is-loading');
-      window.addEventListener('load', function() {
-        window.setTimeout(function() {
-          document.getElementsByTagName("body")[0].classList.remove('is-loading');
-        }, 250);
-      });
-
-      /*wifi setup*/
-      function validateSSID(useTrim) {
-        var ssid = document.forms['wifi']['ssid'].value;
-        if (useTrim === true) ssid = ssid.trim();
-        if (!ssid) {
-          document.forms['wifi']['ssid'].classList.add('validation-error');
-          document.forms['wifi']['ssid'].value = '';
-          document.forms['wifi']['ssid'].placeholder = 'This field can not be empty.';
-        } else {
-          document.forms['wifi']['ssid'].classList.remove('validation-error');
-        }
-      }
-      document.forms['wifi']['ssid'].addEventListener('input', validateSSID);
-
-      /*test connection handler*/
-      document.getElementById('test-connection').addEventListener('click', function(){
-        event.preventDefault();
-        /*validations*/
-        validateSSID(true);
-        if (document.forms['wifi']['ssid'].classList.contains('validation-error'))
-        {
-          return false;
-        }
-        nextSlide();
-        ajaxPost('http://www.example.com', {
-          ssid: document.forms['wifi']['ssid'].value,
-          password: document.forms['wifi']['password'].value
-        }, function(){
-          nextSlide();
-        }, function(body) {
-
-        })
-      });
-    });
-
-    function currentSlide() {
-      return document.getElementsByClassName('slide-in')[0];
-    }
-
-    function nextSlide() {
-      var el = currentSlide();
-      el.classList.remove('slide-in');
-      el.classList.add('slide-away');
-      el.nextElementSibling.classList.add('slide-in');
-      event.preventDefault();
-    }
-
-    function previousSlide() {
-      var el = currentSlide;
-      el.classList.remove('slide-in');
-      el.previousElementSibling.classList.remove('slide-away');
-      el.previousElementSibling.classList.add('slide-in');
-      event.preventDefault();
-    }
-
-    function ajaxPost(url, data, success, error) {
-      var request = new XMLHttpRequest();
-      request.open('POST', url, true);
-      request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-
-      request.onload = function() {
-        if (request.status >= 200 && request.status < 400) {
-          success(request.responseText, request.status);
-        } else {
-          error(request.responseText, request.status);
-        }
-      };
-
-      request.onerror = function() {
-        currentSlide().innerHTML = '<div class="error limit-width center">Unrecoverable error has occured.<br /> Please restart the device and try again.</div>';
-      };
-      request.send(data);
-    }
-  </script>
+  <script src="index.js"></script>
 </body>
 </html>
