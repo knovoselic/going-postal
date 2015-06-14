@@ -1,3 +1,4 @@
+#include <pgmspace.h>
 void (*loopFunction)();
 
 void setup() {
