@@ -35,7 +35,6 @@ end
 
 def export_for_esp(html, max_line_length = 200)
   puts 'Exporting for ESP8266...'
-  File.write('test', html)
   # escape stuff
   html.gsub! '\\', '\\\\\\'
   html.gsub! '"', '\"'
