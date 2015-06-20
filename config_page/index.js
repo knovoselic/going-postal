@@ -32,14 +32,25 @@ document.addEventListener('DOMContentLoaded', function() {
       return false;
     }
     nextSlide();
-    ajaxPost('/wifi/config', {
-      ssid: document.forms['wifi']['ssid'].value,
-      password: document.forms['wifi']['password'].value
-    }, function() {
-      nextSlide();
-    }, function(body) {
-
-    })
+    document.getElementById('wifi-error-text').parentNode.classList.add("hidden");
+    var errorHandler = function(body, status) {
+      document.getElementById('wifi-error-text').innerText = body;
+      document.getElementById('wifi-error-text').parentNode.classList.remove("hidden");
+      previousSlide();
+    };
+    ajaxPost('http://going-postal.config/wifi/config', serialize(document.forms['wifi']), function() {
+      // connection was successfully initiated - ping for status
+      var pingStatus = function() {
+        ajaxPost('http://going-postal.config/wifi/status', '', function(body, status) {
+          if (status == 202) {
+            setTimeout(pingStatus, 100);
+          } else {
+            nextSlide();
+          }
+        }, errorHandler);
+      };
+      pingStatus();
+    }, errorHandler)
   });
 });
 
@@ -56,7 +67,7 @@ function nextSlide() {
 }
 
 function previousSlide() {
-  var el = currentSlide;
+  var el = currentSlide();
   el.classList.remove('slide-in');
   el.previousElementSibling.classList.remove('slide-away');
   el.previousElementSibling.classList.add('slide-in');
@@ -66,7 +77,7 @@ function previousSlide() {
 function ajaxPost(url, data, success, error) {
   var request = new XMLHttpRequest();
   request.open('POST', url, true);
-  request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
