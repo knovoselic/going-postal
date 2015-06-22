@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   /*initialize animations*/
-  document.getElementsByTagName("body")[0].classList.add('is-loading');
+  document.getElementsByTagName('body')[0].classList.add('is-loading');
   window.addEventListener('load', function() {
     window.setTimeout(function() {
-      document.getElementsByTagName("body")[0].classList.remove('is-loading');
+      document.getElementsByTagName('body')[0].classList.remove('is-loading');
     }, 250);
   });
 
@@ -33,26 +33,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     nextSlide();
     document.getElementById('wifi-error-text').parentNode.classList.add("hidden");
-    var errorHandler = function(body, status) {
-      document.getElementById('wifi-error-text').innerText = body;
-      document.getElementById('wifi-error-text').parentNode.classList.remove("hidden");
-      previousSlide();
-    };
-    ajaxPost('http://going-postal.config/wifi/config', serialize(document.forms['wifi']), function() {
-      // connection was successfully initiated - ping for status
-      var pingStatus = function() {
-        ajaxPost('http://going-postal.config/wifi/status', '', function(body, status) {
-          if (status == 202) {
-            setTimeout(pingStatus, 100);
-          } else {
-            nextSlide();
-          }
-        }, errorHandler);
-      };
-      pingStatus();
-    }, errorHandler)
+    ajaxPost('http://going-postal.config/wifi/config', serialize(document.forms['wifi']),
+             pingStatus, wifiErrorHandler)
   });
 });
+
+function wifiErrorHandler(body, status) {
+  document.getElementById('wifi-error-text').innerText = body;
+  document.getElementById('wifi-error-text').parentNode.classList.remove("hidden");
+  previousSlide();
+};
+
+function pingStatus() {
+  setTimeout(function() {
+    ajaxPost('http://going-postal.config/wifi/status', '', function(body, status) {
+      if (status == 202) {
+        pingStatus();
+      } else {
+        nextSlide();
+        restartESP();
+      }
+    }, wifiErrorHandler, 5000, pingStatus, pingStatus);
+  }, 500);
+}
+
+function restartESP() {
+  setTimeout(function() {
+    ajaxPost('http://going-postal.config/restart', '', function(){}, restartESP, null, null, restartESP);
+  }, 500);
+}
 
 function currentSlide() {
   return document.getElementsByClassName('slide-in')[0];
@@ -74,7 +83,7 @@ function previousSlide() {
   event.preventDefault();
 }
 
-function ajaxPost(url, data, success, error) {
+function ajaxPost(url, data, success, error, timeout, onTimeout, onError) {
   var request = new XMLHttpRequest();
   request.open('POST', url, true);
   request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -87,8 +96,17 @@ function ajaxPost(url, data, success, error) {
     }
   };
 
-  request.onerror = function() {
-    currentSlide().innerHTML = '<div class="error limit-width center">Unrecoverable error has occured.<br /> Please restart the device and try again.</div>';
-  };
+  if (onError) {
+    request.onerror = onError;
+  } else {
+    request.onerror = function() {
+      currentSlide().innerHTML = '<div class="error limit-width center">Unrecoverable error has occured.<br /> Please restart the device and try again.</div>';
+    };
+  }
+
+  if (timeout) {
+    request.timeout = timeout;
+    request.ontimeout = onTimeout;
+  }
   request.send(data);
 }
