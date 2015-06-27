@@ -5,7 +5,7 @@ rails_root = Pathname.new(File.dirname(__FILE__)).realdirpath.join '..'
 daemonize true
 threads 16, 128
 workers 0
-environment production
+environment 'production'
 
 directory rails_root.to_s
 pidfile rails_root.join('tmp', 'pids', 'puma.pid').to_s
