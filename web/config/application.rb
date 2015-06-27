@@ -1,3 +1,6 @@
+unless File.exist?(File.expand_path('../secrets.yml', __FILE__))
+  fail 'Please create config/secrets.yml.'
+end
 require File.expand_path('../boot', __FILE__)
 
 require 'action_controller/railtie'
