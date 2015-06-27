@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Going Postal</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <ul id="container">
+    <li class="slide-in">
+      <div class="inner">
+        <h1>Welcome to Going Postal, your IoT post box.</h1>
+        <p>Please follow the instructions to setup your Going Postal device.</p>
+        <ul class="actions">
+          <li><a id="start-setup" class="button scrolly">Setup</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li>
+      <form id="wifi" method="post" action="#" class="limit-width">
+        <h2>WiFi connection setup</h2>
+        <div class="row uniform 50%">
+          <div class="12u$">
+            <p class="error hidden">
+              <b>Ooooops! Device has reported the following error:</b><br />
+              <span id='wifi-error-text'></span>
+            </p>
+          </div>
+          <div class="12u$">
+            <label for="ssid">WiFi name (SSID):</label>
+            <input type="text" name="ssid" id="ssid" />
+          </div>
+          <div class="12u$">
+            <label>WiFi password (leave empty if there's no password):</label>
+            <input type="password" name="password" id="password" />
+          </div>
+          <div class="12u$ center">
+            <ul class="actions">
+              <li><a id="test-connection" class="button special">Test connection</a></li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </li>
+    <li>
+      <h1>Looking for internet connection…</h1>
+      <div class="loro">
+        <div class="circ"></div>
+        <div class="circ3"></div>
+        <div class="circ5"></div>
+        <div class="circ7"></div>
+        <div class="ojo"></div>
+      </div>
+    </li>
+    <li>
+      <h1>All done!</h1>
+      <p>Your device is now configured and fully working. It will automatically exit configuration mode.</p>
+    </li>
+  </ul>
+  <script src="index.js"></script>
+  <script src="serialize-0.2.min.js"></script>
+</body>
+</html>

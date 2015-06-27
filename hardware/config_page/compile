@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+require 'nokogiri'
+
+def main
+  embed_css_js_into_html
+  export_for_esp minifyed_html
+  puts 'Done.'
+end
+
+def embed_css_js_into_html
+  puts 'Embedding CSS and JS into one HTML file...'
+  File.open('index.html') do |file|
+    html = Nokogiri::HTML(file)
+    html.xpath('//link[@rel="stylesheet"]').each do |link_tag|
+      style_tag = Nokogiri::XML::Node.new 'style', html
+      style_tag.content = File.read(link_tag.attr('href'))
+      link_tag.add_next_sibling style_tag
+      link_tag.remove
+    end
+
+    html.xpath('//script').each do |script_tag|
+      script_tag.content = File.read(script_tag.attr('src'))
+      script_tag.attributes['src'].remove
+    end
+    File.write('merged.html', html)
+  end
+end
+
+def minifyed_html
+  puts 'Minifying HTML file...'
+  `htmlminify merged.html`.tap do
+    File.delete 'merged.html'
+  end
+end
+
+def export_for_esp(html, max_line_length = 200)
+  puts 'Exporting for ESP8266...'
+  # escape stuff
+  html.gsub! '\\', '\\\\\\'
+  html.gsub! '"', '\"'
+  File.open('../arduino_code/main/_html.ino', 'w') do |file|
+    file.print 'static const char ICACHE_FLASH_ATTR __html[] = ""'
+    from = 0
+    until from > html.length
+      file.print "\n  \""
+      to = from + max_line_length - 1
+      to -= 1 while html[to] == '\\'
+      file.print html[from..to]
+      file.print '"'
+      from = to + 1
+    end
+    file.puts ';'
+    file.puts 'const __FlashStringHelper *html = '\
+              'reinterpret_cast<const __FlashStringHelper *>(&__html[0]);'
+  end
+end
+
+main
