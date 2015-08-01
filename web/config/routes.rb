@@ -9,9 +9,6 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   get 'dashboard' => 'dashboard#index', as: :dashboard
-  namespace :api do
-    post :'test/email'
-  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
