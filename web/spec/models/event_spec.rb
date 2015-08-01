@@ -20,4 +20,16 @@ RSpec.describe Event do
       expect(subject.errors[:type]).to include 'is not included in the list'
     end
   end
+
+  context 'default scope' do
+    let!(:documents) do
+      [
+        described_class.create(timestamp: Time.zone.now, type: :item_taken),
+        described_class.create(timestamp: Time.zone.now + 5, type: :item_taken)
+      ]
+    end
+    it 'sorts documents descending by timestamp' do
+      expect(described_class.all).to eq documents.reverse
+    end
+  end
 end
