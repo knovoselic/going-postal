@@ -4,6 +4,7 @@ class Device
   index({key: 1}, unique: true)
 
   belongs_to :user
+  has_many :events
 
   field :name, type: String
   field :key, type: String
