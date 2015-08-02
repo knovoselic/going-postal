@@ -7,12 +7,12 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <a href="#" data-edit-location="<%= device.id %>" data-location="<%= device.location %>">
+          <a href="<%= edit_device_path(device) %>" data-edit-location="<%= device.id %>" data-location="<%= device.location %>">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit location
           </a>
         </li>
         <li>
-          <a href="#" data-delete-device="<%= device.id %>">
+          <a href="<%= device_path(device) %>" data-confirm="Are you sure? Events associated with this device will also be deleted." data-method="delete">
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
           </a>
         </li>
