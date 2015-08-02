@@ -10,7 +10,7 @@ RSpec.describe WelcomeController do
     end
     context 'when user is signed in' do
       it 'redirects to Dashboard controller' do
-        sign_in_user
+        sign_in
         get :index
         expect(response).to redirect_to :dashboard
       end
