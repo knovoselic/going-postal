@@ -9,3 +9,7 @@ body {
     border-left-width: 5px;
     border-radius: 3px;
 }
+
+.group > .panel-body > table {
+  margin: 0;
+}
