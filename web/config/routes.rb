@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   get 'dashboard' => 'dashboard#index', as: :dashboard
-
+  resources :devices
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

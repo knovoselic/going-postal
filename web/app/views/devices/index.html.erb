@@ -1,0 +1,10 @@
+<h1>Devices</h1>
+<br />
+<% if @devices.empty? %>
+  <div class="alert alert-info fade in text-center">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    There are no devices assoaciated with your account.
+  </div>
+<% else %>
+  <%= render partial: 'device', collection: @devices %>
+<% end %>

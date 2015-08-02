@@ -10,6 +10,7 @@ RSpec.describe Device do
   context 'validations' do
     it { should validate_presence_of :user }
     it { should validate_presence_of :name }
+    it { should validate_presence_of :color }
     it { should validate_presence_of :key }
     it 'requires key field to be unique across all devices' do
       create described_class
@@ -24,6 +25,12 @@ RSpec.describe Device do
         index.fields == [:key] && index.options[:unique] == true
       end
       expect(result).to be 1
+    end
+  end
+
+  describe '#color' do
+    it 'assigns random color for each new object' do
+      expect(described_class.new.color).not_to eq described_class.new.color
     end
   end
 end
