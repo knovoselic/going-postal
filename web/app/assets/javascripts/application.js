@@ -14,3 +14,4 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require bootstrap3-dialog
+//= require common
