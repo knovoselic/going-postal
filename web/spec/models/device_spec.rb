@@ -33,4 +33,23 @@ RSpec.describe Device do
       expect(described_class.new.color).not_to eq described_class.new.color
     end
   end
+
+  describe '#destroy' do
+    subject { create described_class }
+    let(:another_device) { create described_class, key: '1' }
+    let!(:events) do
+      [
+        create(:event, device: subject),
+        create(:event, device: another_device)
+      ]
+    end
+    before { subject.destroy }
+
+    it 'removes the device from the DB' do
+      expect(described_class.unscoped.all).to eq [another_device]
+    end
+    it 'removes associated events from the DB' do
+      expect(Event.unscoped.all).to eq [events.last]
+    end
+  end
 end

@@ -6,7 +6,7 @@ class Device
   default_scope -> { asc :location }
 
   belongs_to :user
-  has_many :events
+  has_many :events, dependent: :delete
 
   field :location, type: String
   field :key, type: String
