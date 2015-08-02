@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :device do
-    sequence(:name) { |n| "Device name #{n}" }
+    sequence(:location) { |n| "Location #{n}" }
     key '12345'
     association :user
   end

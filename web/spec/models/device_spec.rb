@@ -9,7 +9,7 @@ RSpec.describe Device do
 
   context 'validations' do
     it { should validate_presence_of :user }
-    it { should validate_presence_of :name }
+    it { should validate_presence_of :location }
     it { should validate_presence_of :color }
     it { should validate_presence_of :key }
     it 'requires key field to be unique across all devices' do
