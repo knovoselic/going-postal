@@ -2,6 +2,7 @@ $("a[data-edit-location]").on('click', function(){
   event.preventDefault();
   var deviceId = $(this).attr('data-delete-device');
   var currentValue = $(this).attr('data-location');
+  var url = $(this).attr('href');
 
   BootstrapDialog.show({
     title: 'Edit location',
@@ -17,6 +18,9 @@ $("a[data-edit-location]").on('click', function(){
       label: 'Save',
       action: function(dialogRef) {
         var newValue = dialogRef.getModalBody().find('input').val();
+        $("#editLocation").attr("action", url);
+        $("#editLocation > input[name='device[location]']").val(newValue);
+        $("#editLocation").submit();
       }
     }]
   });
