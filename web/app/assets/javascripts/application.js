@@ -15,3 +15,4 @@
 //= require bootstrap-sprockets
 //= require bootstrap3-dialog
 //= require common
+//= require local_time
