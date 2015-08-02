@@ -54,4 +54,6 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'rb-fsevent' if `uname` =~ /Darwin/
   gem 'guard-rspec', require: false
+
+  gem 'quiet_assets'
 end

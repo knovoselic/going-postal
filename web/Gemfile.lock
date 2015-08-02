@@ -203,6 +203,8 @@ GEM
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
     puma (2.12.2)
+    quiet_assets (1.1.0)
+      railties (>= 3.1, < 5.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -332,6 +334,7 @@ DEPENDENCIES
   pry-byebug
   pry-stack_explorer
   puma
+  quiet_assets
   rails (= 4.2.1)
   rb-fsevent
   rspec-rails
