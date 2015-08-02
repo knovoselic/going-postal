@@ -25,7 +25,7 @@
         <ul class="nav navbar-nav">
           <%= menu_item :'/welcome', :index, 'Home' %>
           <% if user_signed_in? %>
-            <%= menu_item :devices, :index, 'Devices' %>
+            <%= menu_item :'/devices', :index, 'Devices' %>
           <% end %>
         </ul>
         <ul class="nav navbar-nav navbar-right">
