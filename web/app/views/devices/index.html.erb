@@ -1,5 +1,6 @@
 <h1>Devices</h1>
 <br />
+<%= render partial: 'shared/error_messages', object: @device, as: :object %>
 <% if @devices.empty? %>
   <div class="alert alert-info fade in text-center">
     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
