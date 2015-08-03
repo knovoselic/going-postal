@@ -10,6 +10,12 @@ Rails.application.routes.draw do
 
   get 'dashboard' => 'dashboard#index', as: :dashboard
   resources :devices
+
+  namespace :api do
+    namespace :v1 do
+      post :devices, to: 'devices#create'
+    end
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
