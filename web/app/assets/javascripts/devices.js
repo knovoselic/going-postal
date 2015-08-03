@@ -8,6 +8,9 @@ $("a[data-edit-location]").on('click', function(){
     title: 'Edit location',
     size: BootstrapDialog.SIZE_SMALL,
     message: 'Device location: <input type="text" class="form-control" value="' + currentValue + '" />',
+    onshow: function(dialog) {
+      setTimeout(function(){dialog.getModalBody().find('input').select();}, 520);
+    },
     buttons: [{
       label: 'Cancel',
       action: function(dialogRef) {
@@ -16,6 +19,7 @@ $("a[data-edit-location]").on('click', function(){
     },
     {
       label: 'Save',
+      hotkey: 13,
       action: function(dialogRef) {
         var newValue = dialogRef.getModalBody().find('input').val();
         $("#editLocation").attr("action", url);
