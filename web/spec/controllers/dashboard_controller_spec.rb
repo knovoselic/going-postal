@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DashboardController, type: :controller do
+RSpec.describe DashboardController do
   describe 'GET #index' do
     context 'when user is not signed in' do
       it 'redirects to sign in page' do
