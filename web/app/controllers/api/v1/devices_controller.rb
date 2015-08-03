@@ -5,7 +5,7 @@ module Api
         @device = Device.new device_params
         @device.user = current_user
         if @device.save
-          head :created, location: @device
+          head :created
         else
           render json: @device.errors, status: :unprocessable_entity
         end
