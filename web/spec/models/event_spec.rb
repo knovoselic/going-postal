@@ -11,6 +11,12 @@ RSpec.describe Event do
     expect(described_class.new.type).to be_nil
   end
 
+  it 'defaults timestamp to current time' do
+    Timecop.freeze do
+      expect(described_class.new.timestamp).to eq Time.zone.now
+    end
+  end
+
   context 'validations' do
     it { should validate_presence_of :timestamp }
     it { should validate_inclusion_of(:type).in_array(described_class::TYPE) }
