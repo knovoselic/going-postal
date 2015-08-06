@@ -9,14 +9,14 @@ import android.widget.Toast;
 
 import me.going_postal.goingpostal.tasks.LoginTask;
 
-public class MainActivity extends Activity {
+public class SignInActivity extends Activity {
   private EditText edUsername;
   private EditText edPassword;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    setContentView(R.layout.activity_sign_in);
 
     edUsername = (EditText) findViewById(R.id.et_username);
     edPassword = (EditText) findViewById(R.id.et_password);
@@ -29,15 +29,15 @@ public class MainActivity extends Activity {
         final String password = edPassword.getText().toString().trim();
 
         if ("".equals(username)) {
-          Toast.makeText(MainActivity.this, "Username can not be empty.", Toast.LENGTH_SHORT).show();
+          Toast.makeText(SignInActivity.this, "Username can not be empty.", Toast.LENGTH_SHORT).show();
           return;
         }
         if ("".equals(password)) {
-          Toast.makeText(MainActivity.this, "Password can not be empty.", Toast.LENGTH_SHORT).show();
+          Toast.makeText(SignInActivity.this, "Password can not be empty.", Toast.LENGTH_SHORT).show();
           return;
         }
 
-        new LoginTask(MainActivity.this, username, password).execute();
+        new LoginTask(SignInActivity.this, username, password).execute();
       }
     });
   }
