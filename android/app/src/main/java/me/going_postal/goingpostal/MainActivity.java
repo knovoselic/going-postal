@@ -1,74 +1,17 @@
 package me.going_postal.goingpostal;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import me.going_postal.goingpostal.rest.BasicResponse;
-import me.going_postal.goingpostal.rest.Client;
+import me.going_postal.goingpostal.tasks.LoginTask;
 
 public class MainActivity extends Activity {
-  private static final String TAG = MainActivity.class.getName();
   private EditText edUsername;
   private EditText edPassword;
-
-  class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
-    private String username;
-    private String password;
-    private ProgressDialog progressDialog;
-
-    public LoginTask(String username, String password) {
-      this.username = username;
-      this.password = password;
-      progressDialog = new ProgressDialog(getContext(), ProgressDialog.THEME_HOLO_LIGHT);
-      progressDialog.setCancelable(false);
-      progressDialog.setIndeterminate(true);
-      progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-      progressDialog.setMessage("Please wait...");
-    }
-
-    @Override
-    protected void onPreExecute() {
-      progressDialog.show();
-    }
-
-    @Override
-    protected BasicResponse doInBackground(Void... params) {
-      return Client.getInstance().login(username, password);
-    }
-
-    @Override
-    protected void onPostExecute(BasicResponse response) {
-      if (response.connectionError) {
-        Toast.makeText(getContext(), "Unable to connect ot the server. Please make sure your internet connection is working.", Toast.LENGTH_LONG).show();
-      } else if (response.statusCode == 204) {
-        Toast.makeText(getContext(), "Woohoo!", Toast.LENGTH_SHORT).show();
-      } else {
-        try {
-          JSONObject test = new JSONObject(response.body);
-          Toast.makeText(getContext(), test.getString("error"), Toast.LENGTH_LONG).show();
-        } catch (NullPointerException | JSONException e) {
-          Toast.makeText(getContext(), "Unexpected server error has occurred. Please try again later.", Toast.LENGTH_LONG).show();
-          Log.e(TAG, "", e);
-        }
-      }
-      progressDialog.dismiss();
-    }
-
-    private Context getContext() {
-      return MainActivity.this;
-    }
-  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +37,7 @@ public class MainActivity extends Activity {
           return;
         }
 
-        new LoginTask(username, password).execute();
+        new LoginTask(MainActivity.this, username, password).execute();
       }
     });
   }
