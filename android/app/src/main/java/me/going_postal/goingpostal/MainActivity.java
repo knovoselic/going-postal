@@ -2,10 +2,12 @@ package me.going_postal.goingpostal;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -75,6 +77,7 @@ public class MainActivity extends Activity {
       Toast.makeText(this, "Invalid QR code.", Toast.LENGTH_LONG).show();
       return;
     }
+
     final AlertDialog dialog = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
             .setView(R.layout.alert_device_location)
             .setTitle("Add device")
@@ -84,6 +87,9 @@ public class MainActivity extends Activity {
     dialog.setOnShowListener(new DialogInterface.OnShowListener() {
       @Override
       public void onShow(DialogInterface unused) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(dialog.findViewById(R.id.et_location), InputMethodManager.SHOW_IMPLICIT);
+
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
