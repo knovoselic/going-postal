@@ -2,7 +2,6 @@ package me.going_postal.goingpostal.tasks;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -12,21 +11,22 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 
-import me.going_postal.goingpostal.MainActivity;
 import me.going_postal.goingpostal.rest.BasicResponse;
 import me.going_postal.goingpostal.rest.ServerClient;
 
-public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
+public class AddDeviceTask extends AsyncTask<Void, Void, BasicResponse> {
   private static final String TAG = LoginTask.class.getName();
-  private String username;
-  private String password;
+  private String key;
+  private String location;
   private ProgressDialog progressDialog;
   private Activity context;
+  private Runnable onSuccess;
 
-  public LoginTask(Activity context, String username, String password) {
+  public AddDeviceTask(Activity context, String key, String location, Runnable onSuccess) {
     this.context = context;
-    this.username = username;
-    this.password = password;
+    this.key = key;
+    this.location = location;
+    this.onSuccess = onSuccess;
     progressDialog = new ProgressDialog(context, ProgressDialog.THEME_HOLO_LIGHT);
     progressDialog.setCancelable(false);
     progressDialog.setIndeterminate(true);
@@ -41,28 +41,32 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
 
   @Override
   protected BasicResponse doInBackground(Void... params) {
-    return ServerClient.getInstance().signIn(username, password);
+    return ServerClient.getInstance().addDevice(key, location);
   }
 
   @Override
   protected void onPostExecute(BasicResponse response) {
+    progressDialog.dismiss();
     if (response.connectionError) {
       Toast.makeText(context, "Unable to connect ot the server. Please make sure your internet connection is working.", Toast.LENGTH_LONG).show();
-    } else if (response.statusCode == HttpURLConnection.HTTP_NO_CONTENT) {
-      Intent intent = new Intent(context, MainActivity.class);
-      context.startActivity(intent);
-      context.finish();
-      ServerClient.getInstance().persistSession(context);
-    } else {
-      try {
-        JSONObject responseJSON = new JSONObject(response.body);
-        Toast.makeText(context, responseJSON.getString("error"), Toast.LENGTH_LONG).show();
-      } catch (NullPointerException | JSONException e) {
-        Toast.makeText(context, "Unexpected server error has occurred. Please try again later.", Toast.LENGTH_LONG).show();
-        Log.e(TAG, "", e);
-      }
+      return;
     }
-    progressDialog.dismiss();
-  }
+    if (response.statusCode == HttpURLConnection.HTTP_CREATED) {
+      Toast.makeText(context, "Device was successfully added to your account.", Toast.LENGTH_LONG).show();
+      onSuccess.run();
+      return;
+    }
 
+    try {
+      JSONObject responseJSON = new JSONObject(response.body);
+      if (responseJSON.has("key")) {
+        Toast.makeText(context, "This device is already linked with an account.", Toast.LENGTH_LONG).show();
+        return;
+      }
+    } catch (NullPointerException | JSONException e) {
+      Log.w(TAG, response.body);
+      Log.e(TAG, "", e);
+    }
+    Toast.makeText(context, "Unexpected server error has occurred. Please try again later.", Toast.LENGTH_LONG).show();
+  }
 }

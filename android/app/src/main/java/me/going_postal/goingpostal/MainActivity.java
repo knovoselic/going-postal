@@ -14,6 +14,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import me.going_postal.goingpostal.rest.ServerClient;
+import me.going_postal.goingpostal.tasks.AddDeviceTask;
 
 public class MainActivity extends Activity {
   private static final String QRCODE_HEADER = "GPv1.0|";
@@ -69,12 +70,11 @@ public class MainActivity extends Activity {
     }
   }
 
-  private void addNewDeviceFromQRCode(String qrCodeContents) {
+  private void addNewDeviceFromQRCode(final String qrCodeContents) {
     if (!qrCodeContents.startsWith(QRCODE_HEADER)) {
       Toast.makeText(this, "Invalid QR code.", Toast.LENGTH_LONG).show();
       return;
     }
-    String guid = qrCodeContents.substring(QRCODE_HEADER.length());
     final AlertDialog dialog = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
             .setView(R.layout.alert_device_location)
             .setTitle("Add device")
@@ -93,10 +93,15 @@ public class MainActivity extends Activity {
               Toast.makeText(MainActivity.this, "Please enter device location.", Toast.LENGTH_LONG).show();
               return;
             }
-            //TODO: REST request to add device
+            String key = qrCodeContents.substring(QRCODE_HEADER.length());
+            new AddDeviceTask(MainActivity.this, key, location, new Runnable() {
+              @Override
+              public void run() {
+                dialog.dismiss();
+              }
+            }).execute();
           }
         });
-
       }
     });
     dialog.show();
