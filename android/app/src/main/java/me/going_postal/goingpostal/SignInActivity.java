@@ -29,7 +29,7 @@ public class SignInActivity extends Activity {
 
     edUsername = (EditText) findViewById(R.id.et_username);
     edPassword = (EditText) findViewById(R.id.et_password);
-    Button btnLogin = (Button) findViewById(R.id.btn_login);
+    Button btnLogin = (Button) findViewById(R.id.btn_sign_in);
 
     btnLogin.setOnClickListener(new View.OnClickListener() {
       @Override
