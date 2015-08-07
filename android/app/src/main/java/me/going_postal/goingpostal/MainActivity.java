@@ -7,10 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import me.going_postal.goingpostal.rest.ServerClient;
 
 public class MainActivity extends Activity {
+  private static final String QRCODE_HEADER = "GPv1.0|";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +24,8 @@ public class MainActivity extends Activity {
     setContentView(R.layout.activity_main);
 
     Button btnSignOut = (Button) findViewById(R.id.btn_sign_out);
+    Button btnAddDevice = (Button) findViewById(R.id.btn_add_device);
+
     btnSignOut.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -31,11 +39,66 @@ public class MainActivity extends Activity {
                     Intent intent = new Intent(MainActivity.this, SignInActivity.class);
                     startActivity(intent);
                     finish();
+                    dialog.dismiss();
                   }
                 })
                 .setNegativeButton("No", null)
                 .show();
       }
     });
+    btnAddDevice.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+        integrator.setPrompt("");
+        integrator.initiateScan();
+      }
+    });
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+    if(result != null) {
+      if(result.getContents() != null) {
+        addNewDeviceFromQRCode(result.getContents());
+      }
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+    }
+  }
+
+  private void addNewDeviceFromQRCode(String qrCodeContents) {
+    if (!qrCodeContents.startsWith(QRCODE_HEADER)) {
+      Toast.makeText(this, "Invalid QR code.", Toast.LENGTH_LONG).show();
+      return;
+    }
+    String guid = qrCodeContents.substring(QRCODE_HEADER.length());
+    final AlertDialog dialog = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+            .setView(R.layout.alert_device_location)
+            .setTitle("Add device")
+            .setPositiveButton("Add device", null)
+            .setNegativeButton("Cancel", null)
+            .create();
+    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+      @Override
+      public void onShow(DialogInterface unused) {
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            final EditText etLocation = (EditText) dialog.findViewById(R.id.et_location);
+            String location = etLocation.getText().toString().trim();
+            if ("".equals(location)) {
+              Toast.makeText(MainActivity.this, "Please enter device location.", Toast.LENGTH_LONG).show();
+              return;
+            }
+            //TODO: REST request to add device
+          }
+        });
+
+      }
+    });
+    dialog.show();
   }
 }

@@ -5,4 +5,6 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="add_device">Add device</string>
+    <string name="please_enter_device_location">Please enter location of the device:</string>
+    <string name="device_location_hint">e.g. Home or Office</string>
 </resources>
