@@ -41,7 +41,7 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
 
   @Override
   protected BasicResponse doInBackground(Void... params) {
-    return ServerClient.getInstance().login(username, password);
+    return ServerClient.getInstance().signIn(username, password);
   }
 
   @Override

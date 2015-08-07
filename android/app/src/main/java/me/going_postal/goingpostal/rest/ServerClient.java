@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import org.apache.http.cookie.Cookie;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +52,7 @@ public class ServerClient {
     CookieHandler.setDefault(cookieManager);
   }
 
-  public BasicResponse login(String username, String password) {
+  public BasicResponse signIn(String username, String password) {
     String postData = String.format("{\"login\": {\"username\": \"%s\", \"password\": \"%s\"}}", username, password);
     return doPost(getUrl("/api/v1/users/sign_in"), postData);
   }
@@ -64,6 +66,13 @@ public class ServerClient {
     SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
     editor.putStringSet(PREFERENCES_KEY, cookiesToPersist);
     editor.apply();
+  }
+
+  public void signOut(Context context) {
+    SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+    editor.remove(PREFERENCES_KEY);
+    editor.apply();
+    ((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
   }
 
   public Boolean restoreSession(Context context) {
