@@ -1,5 +1,7 @@
 package me.going_postal.goingpostal.rest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -7,14 +9,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookieStore;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Client {
   private static final String TAG = Client.class.getName();
+  private static final String PREFERENCES_NAME = "me.going_postal.goingpostal.session";
+  private static final String PREFERENCES_KEY = "cookies";
   private static Client instance;
   private URL baseUrl;
+  private URI baseUri;
   private final String charset = java.nio.charset.StandardCharsets.UTF_8.name();
 
   public static Client getInstance() {
@@ -27,14 +41,44 @@ public class Client {
   private Client() {
     try {
       baseUrl = new URL("http://192.168.144.40:3000/");
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
+      baseUri = new URI(baseUrl.toString());
+    } catch (URISyntaxException | MalformedURLException e) {
+      Log.e(TAG, "", e);
     }
+    // set up VM wide cookie manager
+    CookieManager cookieManager = new CookieManager();
+    CookieHandler.setDefault(cookieManager);
   }
 
   public BasicResponse login(String username, String password) {
     String postData = String.format("{\"login\": {\"username\": \"%s\", \"password\": \"%s\"}}", username, password);
     return doPost(getUrl("/api/v1/users/sign_in"), postData);
+  }
+
+  public void persistSession(Context context) {
+    List<HttpCookie> cookies = ((CookieManager)CookieManager.getDefault()).getCookieStore().get(baseUri);
+    Set<String> cookiesToPersist = new HashSet<>();
+    for(HttpCookie cookie : cookies) {
+      cookiesToPersist.add(cookie.toString());
+    }
+    SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+    editor.putStringSet(PREFERENCES_KEY, cookiesToPersist);
+    editor.apply();
+  }
+
+  public Boolean restoreSession(Context context) {
+    SharedPreferences prefs = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+    Set<String> cookies = prefs.getStringSet(PREFERENCES_KEY, new HashSet<String>());
+    if (cookies.isEmpty()) {
+      return false;
+    }
+    CookieStore cookieStore = ((CookieManager)CookieManager.getDefault()).getCookieStore();
+    for(String cookie : cookies) {
+      for(HttpCookie parsedCookie : HttpCookie.parse(cookie)) {
+        cookieStore.add(baseUri, parsedCookie);
+      }
+    }
+    return true;
   }
 
   private BasicResponse doPost(URL url, String postData) {
@@ -60,7 +104,8 @@ public class Client {
       } else {
         body = readStream(connection.getErrorStream());
       }
-      return  new BasicResponse(statusCode, body, false);
+
+      return new BasicResponse(statusCode, body, false);
     } catch (IOException e) {
       Log.e(TAG, "", e);
     }

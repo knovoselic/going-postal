@@ -1,7 +1,8 @@
 package me.going_postal.goingpostal.tasks;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,6 +10,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+
+import me.going_postal.goingpostal.MainActivity;
 import me.going_postal.goingpostal.rest.BasicResponse;
 import me.going_postal.goingpostal.rest.Client;
 
@@ -17,9 +21,9 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
   private String username;
   private String password;
   private ProgressDialog progressDialog;
-  private Context context;
+  private Activity context;
 
-  public LoginTask(Context context, String username, String password) {
+  public LoginTask(Activity context, String username, String password) {
     this.context = context;
     this.username = username;
     this.password = password;
@@ -44,8 +48,11 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
   protected void onPostExecute(BasicResponse response) {
     if (response.connectionError) {
       Toast.makeText(context, "Unable to connect ot the server. Please make sure your internet connection is working.", Toast.LENGTH_LONG).show();
-    } else if (response.statusCode == 204) {
-      Toast.makeText(context, "Woohoo!", Toast.LENGTH_SHORT).show();
+    } else if (response.statusCode == HttpURLConnection.HTTP_NO_CONTENT) {
+      Intent intent = new Intent(context, MainActivity.class);
+      context.startActivity(intent);
+      context.finish();
+      Client.getInstance().persistSession(context);
     } else {
       try {
         JSONObject test = new JSONObject(response.body);
