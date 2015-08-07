@@ -12,8 +12,8 @@ import me.going_postal.goingpostal.rest.ServerClient;
 import me.going_postal.goingpostal.tasks.LoginTask;
 
 public class SignInActivity extends Activity {
-  private EditText edUsername;
-  private EditText edPassword;
+  private EditText etUsername;
+  private EditText etPassword;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +27,15 @@ public class SignInActivity extends Activity {
     }
     setContentView(R.layout.activity_sign_in);
 
-    edUsername = (EditText) findViewById(R.id.et_username);
-    edPassword = (EditText) findViewById(R.id.et_password);
+    etUsername = (EditText) findViewById(R.id.et_username);
+    etPassword = (EditText) findViewById(R.id.et_password);
     Button btnLogin = (Button) findViewById(R.id.btn_sign_in);
 
     btnLogin.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        final String username = edUsername.getText().toString().trim();
-        final String password = edPassword.getText().toString().trim();
+        final String username = etUsername.getText().toString().trim();
+        final String password = etPassword.getText().toString().trim();
 
         if ("".equals(username)) {
           Toast.makeText(SignInActivity.this, "Username can not be empty.", Toast.LENGTH_SHORT).show();
