@@ -106,6 +106,7 @@ public class ServerClient {
 
     try {
       connection.setDoOutput(true);
+      connection.setRequestProperty("Accept", "application/json");
       connection.setRequestProperty("Accept-Charset", charset);
       connection.setRequestProperty("Content-Type", String.format("application/json;charset=%s", charset));
       OutputStream output = connection.getOutputStream();
