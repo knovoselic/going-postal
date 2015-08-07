@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import me.going_postal.goingpostal.rest.Client;
+import me.going_postal.goingpostal.rest.ServerClient;
 import me.going_postal.goingpostal.tasks.LoginTask;
 
 public class SignInActivity extends Activity {
@@ -19,7 +19,7 @@ public class SignInActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (Client.getInstance().restoreSession(this)) {
+    if (ServerClient.getInstance().restoreSession(this)) {
       Intent mainActivityIntent = new Intent(this, MainActivity.class);
       startActivity(mainActivityIntent);
       finish();

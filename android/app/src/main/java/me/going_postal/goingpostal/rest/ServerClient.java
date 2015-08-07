@@ -22,23 +22,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Client {
-  private static final String TAG = Client.class.getName();
+public class ServerClient {
+  private static final String TAG = ServerClient.class.getName();
   private static final String PREFERENCES_NAME = "me.going_postal.goingpostal.session";
   private static final String PREFERENCES_KEY = "cookies";
-  private static Client instance;
+  private static ServerClient instance;
   private URL baseUrl;
   private URI baseUri;
   private final String charset = java.nio.charset.StandardCharsets.UTF_8.name();
 
-  public static Client getInstance() {
+  public static ServerClient getInstance() {
     if (instance == null) {
-      instance = new Client();
+      instance = new ServerClient();
     }
     return instance;
   }
 
-  private Client() {
+  private ServerClient() {
     try {
       baseUrl = new URL("http://192.168.144.40:3000/");
       baseUri = new URI(baseUrl.toString());

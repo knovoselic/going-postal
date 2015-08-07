@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 
 import me.going_postal.goingpostal.MainActivity;
 import me.going_postal.goingpostal.rest.BasicResponse;
-import me.going_postal.goingpostal.rest.Client;
+import me.going_postal.goingpostal.rest.ServerClient;
 
 public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
   private static final String TAG = LoginTask.class.getName();
@@ -41,7 +41,7 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
 
   @Override
   protected BasicResponse doInBackground(Void... params) {
-    return Client.getInstance().login(username, password);
+    return ServerClient.getInstance().login(username, password);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
       Intent intent = new Intent(context, MainActivity.class);
       context.startActivity(intent);
       context.finish();
-      Client.getInstance().persistSession(context);
+      ServerClient.getInstance().persistSession(context);
     } else {
       try {
         JSONObject test = new JSONObject(response.body);
