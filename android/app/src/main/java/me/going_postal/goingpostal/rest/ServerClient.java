@@ -57,6 +57,13 @@ public class ServerClient {
     return doPost(getUrl("/api/v1/users/sign_in"), postData);
   }
 
+  public void signOut(Context context) {
+    SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+    editor.remove(PREFERENCES_KEY);
+    editor.apply();
+    ((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
+  }
+
   public void persistSession(Context context) {
     List<HttpCookie> cookies = ((CookieManager)CookieManager.getDefault()).getCookieStore().get(baseUri);
     Set<String> cookiesToPersist = new HashSet<>();
@@ -68,11 +75,9 @@ public class ServerClient {
     editor.apply();
   }
 
-  public void signOut(Context context) {
-    SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
-    editor.remove(PREFERENCES_KEY);
-    editor.apply();
-    ((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
+  public BasicResponse addDevice(String key, String location) {
+    String postData = String.format("{\"device\": {\"key\": \"%s\", \"location\": \"%s\"}}", key, location);
+    return doPost(getUrl("/api/v1/devices"), postData);
   }
 
   public Boolean restoreSession(Context context) {
