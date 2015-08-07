@@ -89,6 +89,7 @@ public class ServerClient {
     CookieStore cookieStore = ((CookieManager)CookieManager.getDefault()).getCookieStore();
     for(String cookie : cookies) {
       for(HttpCookie parsedCookie : HttpCookie.parse(cookie)) {
+        parsedCookie.setDomain(baseUrl.getHost());
         cookieStore.add(baseUri, parsedCookie);
       }
     }
