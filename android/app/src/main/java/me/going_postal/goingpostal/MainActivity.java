@@ -20,7 +20,7 @@ import me.going_postal.goingpostal.rest.ServerClient;
 import me.going_postal.goingpostal.tasks.AddDeviceTask;
 
 public class MainActivity extends Activity {
-  private static final String QRCODE_HEADER = "GPv1.0|";
+  private static final String QR_CODE_HEADER = "GPv1.0|";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
   }
 
   private void addNewDeviceFromQRCode(final String qrCodeContents) {
-    if (!qrCodeContents.startsWith(QRCODE_HEADER)) {
+    if (!qrCodeContents.startsWith(QR_CODE_HEADER)) {
       Toast.makeText(this, "Invalid QR code.", Toast.LENGTH_LONG).show();
       return;
     }
@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
               Toast.makeText(MainActivity.this, "Please enter device location.", Toast.LENGTH_LONG).show();
               return;
             }
-            String key = qrCodeContents.substring(QRCODE_HEADER.length());
+            String key = qrCodeContents.substring(QR_CODE_HEADER.length());
             new AddDeviceTask(MainActivity.this, key, location, new Runnable() {
               @Override
               public void run() {
