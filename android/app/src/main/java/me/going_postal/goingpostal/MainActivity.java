@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.parse.ParseInstallation;
 
 import me.going_postal.goingpostal.rest.ServerClient;
 import me.going_postal.goingpostal.tasks.AddDeviceTask;
@@ -43,6 +44,9 @@ public class MainActivity extends Activity {
                     startActivity(intent);
                     finish();
                     dialog.dismiss();
+                    ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+                    installation.remove("userHash");
+                    installation.saveInBackground();
                   }
                 })
                 .setNegativeButton("No", null)

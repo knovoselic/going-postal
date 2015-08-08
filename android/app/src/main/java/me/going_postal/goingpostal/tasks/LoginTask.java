@@ -7,6 +7,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.parse.ParseInstallation;
+import com.parse.codec.binary.Hex;
+import com.parse.codec.digest.DigestUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +29,7 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
 
   public LoginTask(Activity context, String username, String password) {
     this.context = context;
-    this.username = username;
+    this.username = username.toLowerCase();
     this.password = password;
     progressDialog = new ProgressDialog(context, ProgressDialog.THEME_HOLO_LIGHT);
     progressDialog.setCancelable(false);
@@ -53,6 +57,9 @@ public class LoginTask extends AsyncTask<Void, Void, BasicResponse> {
       context.startActivity(intent);
       context.finish();
       ServerClient.getInstance().persistSession(context);
+      ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+      installation.put("userHash", new String(Hex.encodeHex(DigestUtils.md5(username))));
+      installation.saveInBackground();
     } else {
       try {
         JSONObject responseJSON = new JSONObject(response.body);
