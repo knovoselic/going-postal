@@ -42,7 +42,7 @@ public class ServerClient {
 
   private ServerClient() {
     try {
-      baseUrl = new URL("http://192.168.144.40:3000/");
+      baseUrl = new URL("http://going-postal.me/");
       baseUri = new URI(baseUrl.toString());
     } catch (URISyntaxException | MalformedURLException e) {
       Log.e(TAG, "", e);
