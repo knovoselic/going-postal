@@ -6,39 +6,37 @@ enum class BootMode
   Configuration = 0,
   Sensor = 1
 };
-
+void setBootMode(BootMode mode);
 void (*loopFunction)();
 
-void setup() {
-  loopFunction = &configurationLoop;
-  configurationSetup();
+void setBootMode(BootMode mode)
+{
   EEPROM.begin(1);
-  int x = EEPROM.read(0);
-  switch(x)
-  {
-    case (int)BootMode::Configuration:
-      Serial.println("Configuration");
-      break;
-    case (int)BootMode::Sensor:
-      Serial.println("Sensor");
-      break;
-    default:
-      Serial.println(x);
-  }
+  EEPROM.write(0, (int)mode);
   EEPROM.end();
+}
+
+void setup() {
+  EEPROM.begin(1);
+  int bootMode = EEPROM.read(0);
+  EEPROM.end();
+
+  Serial.begin(115200);
+  Serial.setDebugOutput(true);
+  Serial.println();
+
+  if (bootMode == (int)BootMode::Sensor)
+  {
+    Serial.println("Sensor boot");
+    loopFunction = &sensorLoop;
+    sensorSetup();
+  } else {
+    Serial.println("Configuration boot");
+    loopFunction = &configurationLoop;
+    configurationSetup();
+  }
 }
 
 void loop() {
   loopFunction();
-}
-
-void measure(String name, std::function<void(void)> function)
-{
-  int start = millis();
-  function();
-  int duration = millis() - start;
-  if (duration > 2)
-  {
-    Serial.println(name + " took: " + duration + "ms.");
-  }
 }

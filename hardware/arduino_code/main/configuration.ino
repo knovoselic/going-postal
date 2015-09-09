@@ -10,7 +10,8 @@ extern "C" {
 }
 
 const byte DNS_PORT = 53;
-IPAddress apIP(192, 168, 144, 1);
+IPAddress apIP(172, 20, 251, 1);
+IPAddress apNetmask(255, 255, 255, 248);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
 String domainName = "going-postal.config";
@@ -31,7 +32,7 @@ void handleNotFound()
 void handleIndex()
 {
   ETS_UART_INTR_DISABLE();
-  FlashStream htmlStream((PGM_P)html);
+  FlashStream htmlStream((PGM_P)html, "index.html");
   webServer.streamFile(htmlStream, "text/html");
   ETS_UART_INTR_ENABLE();
 }
@@ -63,11 +64,12 @@ void getWiFiStatus()
   {
     wifiStatus = WiFi.waitForConnectResult();
   }
+  IPAddress result;
   switch(wifiStatus)
   {
     case WL_CONNECTED:
       webServer.send(200, "text/plain", "");
-      saveConfig();
+      setBootMode(BootMode::Sensor);
       return;
     case WL_NO_SSID_AVAIL:
       webServer.send(503, "text/plain", "Could not find specified WiFi network."
@@ -87,22 +89,11 @@ void getWiFiStatus()
   WiFi.disconnect();
 }
 
-void saveConfig()
-{
-  EEPROM.begin(1);
-  EEPROM.write(0, (int)BootMode::Sensor);
-  EEPROM.end();
-}
-
 void configurationSetup() {
-  Serial.begin(115200);
-  Serial.setDebugOutput(true);
-  Serial.println();
-
   WiFi.mode(WIFI_AP_STA);
   WiFi.disconnect();
 
-  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
+  WiFi.softAPConfig(apIP, apIP, apNetmask);
   WiFi.softAP("GoingPostal configuration");
 
   dnsServer.setTTL(60 * 60);
@@ -124,6 +115,6 @@ void configurationSetup() {
 }
 
 void configurationLoop() {
-  measure("DNS", []() { dnsServer.processNextRequest(); });
-  measure("Web", []() { webServer.handleClient(); });
+  dnsServer.processNextRequest();
+  webServer.handleClient();
 }
