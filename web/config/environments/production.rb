@@ -81,6 +81,7 @@ Rails.application.configure do
 
   # Use SendGrid as SMTP server for production
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = {host: 'going-postal.me'}
   config.action_mailer.smtp_settings = {
     address: 'smtp.sendgrid.net',
     port: 587,
