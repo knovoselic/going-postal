@@ -4,7 +4,7 @@ module Api
       skip_before_action :authenticate_user!
 
       def create
-        @device = current_user.devices.find_by key: device_key
+        @device = Device.find_by key: device_key
         @event = Event.new event_params
         @event.device = @device
 
@@ -32,7 +32,7 @@ module Api
           api_key: 'DxEiCtQ17tfsyG1mwt3rbPuZVhCRUUNy5AUmDOgp'
         )
         push = Parse::Push.new alert: "You've just received something!"
-        push.where = {userHash: Digest::MD5.hexdigest(current_user.email)}
+        push.where = {userHash: Digest::MD5.hexdigest(@device.user.email)}
         push.save
       end
     end
