@@ -1,25 +1,44 @@
+#include <algorithm>
+
 unsigned long restartPressed = 0;
 const short RESTART_DURATION = 5000;
 short threshold = 0;
 byte hasMailPrevious = 0;
 WiFiClient client;
+const byte MAX_SAMPLES = 21;
+short values[MAX_SAMPLES] = {0};
+byte _currentIndex = 0;
+
+byte currentIndex()
+{
+  return (_currentIndex = (_currentIndex + 1) % MAX_SAMPLES);
+}
+
+short medianValue()
+{
+  short copy[MAX_SAMPLES] = {0};
+  memcpy(copy, values, sizeof(values));
+  std::sort(std::begin(copy), std::end(copy));
+  return copy[MAX_SAMPLES / 2];
+}
 
 void sensorSetup() {
   pinMode(13, INPUT);
 
-  WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_OFF);
+
   Serial.println("Calibrating...");
   short value;
-  for(int i = 0; i < 20; i++)
+  for(int i = 0; i < MAX_SAMPLES; i++)
   {
     value = system_adc_read();
-    if (value > threshold)
-    {
-      threshold = value;
-    }
-    delay(50);
+    Serial.print(value);
+    Serial.print(' ');
+    values[currentIndex()] = value;
+    delay(100);
   }
-  threshold += 5;
+  Serial.println();
+  threshold = medianValue() + 5;
   Serial.print("Threshold is ");
   Serial.print(threshold);
   Serial.println(".");
@@ -46,12 +65,13 @@ void resetButtonLoop()
 
 void sensorLoop() {
   short value = system_adc_read();
-  if (value > threshold)
+  values[currentIndex()] = value;
+  if (medianValue() > threshold)
   {
     if (!hasMailPrevious)
     {
       Serial.println("You've got mail!");
-      //sendEmail();
+      sendEmail();
     }
     hasMailPrevious = 5;
   }
@@ -60,6 +80,8 @@ void sensorLoop() {
     --hasMailPrevious;
   }
   Serial.print(value);
+  Serial.print(' ');
+  Serial.print(medianValue());
   Serial.print("|");
   Serial.print(hasMailPrevious);
   Serial.println();
@@ -69,6 +91,13 @@ void sensorLoop() {
 
 void sendEmail()
 {
+  WiFi.mode(WIFI_STA);
+  Serial.println("Waiting for WiFi...");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(250);
+  };
+  Serial.println("\nWiFi successfully connected.");
+
   long start = millis();
   if (client.connect("going-postal.me", 80)) {
     client.print("POST /api/test/email HTTP/1.1\r\n");
@@ -86,5 +115,6 @@ void sendEmail()
 
   }
   client.stop();
+  WiFi.mode(WIFI_OFF);
   Serial.println(millis() - start);
 }
