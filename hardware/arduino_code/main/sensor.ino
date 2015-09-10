@@ -101,19 +101,20 @@ void sendEmail()
 
   long start = millis();
   if (client.connect("going-postal.me", 80)) {
-    client.print("POST /api/test/email HTTP/1.1\r\n");
+    String data = "{\"device_key\": \"8dc36053-d69e-4813-8f8c-afe9c7557071\",\"event\": {\"type\": \"item_received\"}}";
+    client.print("POST /api/v1/events HTTP/1.1\r\n");
     client.print("Host: going-postal.me\r\n");
     client.print("Connection: close\r\n");
     client.print("Content-Type: application/json\r\n");
-    client.print("Content-Length: 0\r\n\r\n");
+    client.print("Content-Length: " + data.length() + "\r\n\r\n");
+    client.print(data);
+    client.print("\r\n");
 
     Serial.println("JSON request sent successfully.");
-    client.setTimeout(1);
     while(client.connected()) {
       String line = client.readStringUntil('\r');
       Serial.print(line);
     }
-
   }
   client.stop();
   delay(5000);
