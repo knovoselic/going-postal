@@ -106,7 +106,9 @@ void sendEmail()
     client.print("Host: going-postal.me\r\n");
     client.print("Connection: close\r\n");
     client.print("Content-Type: application/json\r\n");
-    client.print("Content-Length: " + data.length() + "\r\n\r\n");
+    client.print("Content-Length: ");
+    client.print(data.length());
+    client.print("\r\n\r\n");
     client.print(data);
     client.print("\r\n");
 
