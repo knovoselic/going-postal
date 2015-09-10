@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'nokogiri'
-
+require 'pry'
 def main
   embed_css_js_into_html
   export_for_esp minifyed_html
@@ -17,8 +17,8 @@ def embed_css_js_into_html
       link_tag.add_next_sibling style_tag
       link_tag.remove
     end
-
     html.xpath('//script').each do |script_tag|
+      next unless script_tag.attributes['src']
       script_tag.content = File.read(script_tag.attr('src'))
       script_tag.attributes['src'].remove
     end
