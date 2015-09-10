@@ -2,6 +2,7 @@
 
 unsigned long restartPressed = 0;
 const short RESTART_DURATION = 5000;
+const byte TOLERANCE = 12;
 short threshold = 0;
 byte hasMailPrevious = 0;
 WiFiClient client;
@@ -38,8 +39,9 @@ void sensorSetup() {
     values[currentIndex()] = value;
     delay(100);
   }
+  threshold = medianValue() + TOLERANCE;
+
   Serial.println();
-  threshold = medianValue() + 10;
   Serial.print("Threshold is ");
   Serial.print(threshold);
   Serial.println(".");
@@ -119,8 +121,8 @@ void sendEmail()
     }
   }
   client.stop();
-  delay(5000);
+  delay(1000);
   wifi_station_disconnect();
   Serial.println(millis() - start);
-  delay(25000);
+  delay(4000);
 }

@@ -17,7 +17,8 @@ ESP8266WebServer webServer(80);
 String domainName = "going-postal.config";
 long shouldRestart = 0;
 short wifiStatus;
-
+String ssid;
+String password;
 void handleNotFound()
 {
   if (webServer.uri() == "/favicon.ico" || webServer.method() != HTTP_GET)
@@ -39,29 +40,28 @@ void handleIndex()
 
 void validateWiFiConfig()
 {
-  String ssid = webServer.arg("ssid");
+  ssid = webServer.arg("ssid");
   ssid.trim();
   if (ssid == "")
   {
     webServer.send(422, "text/plain", "SSID can not be empty!");
   }
-  String password = webServer.arg("password");
+  password = webServer.arg("password");
 
   wifiStatus = -1;
   webServer.send(200, "text/plain", "");
-  delay(1000);
-  if (password == "")
-  {
-    WiFi.begin(ssid.c_str());
-  } else {
-    WiFi.begin(ssid.c_str(), password.c_str());
-  }
 }
 
 void getWiFiStatus()
 {
   if (wifiStatus == -1)
   {
+    if (password == "")
+    {
+      WiFi.begin(ssid.c_str());
+    } else {
+      WiFi.begin(ssid.c_str(), password.c_str());
+    }
     wifiStatus = WiFi.waitForConnectResult();
   }
   IPAddress result;
