@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     nextSlide();
     document.getElementById('wifi-error-text').parentNode.classList.add("hidden");
-    ajaxPost('http://going-postal.config/wifi/config', serialize(document.forms['wifi']),
+    ajaxRequest('http://going-postal.config/wifi/config', serialize(document.forms['wifi']),
              pingStatus, wifiErrorHandler)
   });
 });
@@ -46,7 +46,7 @@ function wifiErrorHandler(body, status) {
 
 function pingStatus() {
   setTimeout(function() {
-    ajaxPost('http://going-postal.config/wifi/status', '', function(body, status) {
+    ajaxRequest('http://going-postal.config/wifi/status', '', function(body, status) {
       if (status == 202) {
         pingStatus();
       } else {
@@ -59,7 +59,7 @@ function pingStatus() {
 
 function restartESP() {
   setTimeout(function() {
-    ajaxPost('http://going-postal.config/restart', '', function(){}, restartESP, null, null, restartESP);
+    ajaxRequest('http://going-postal.config/restart', '', function(){}, restartESP, null, null, restartESP);
   }, 500);
 }
 
@@ -83,7 +83,7 @@ function previousSlide() {
   event.preventDefault();
 }
 
-function ajaxPost(url, data, success, error, timeout, onTimeout, onError) {
+function ajaxRequest(url, data, success, error, timeout, onTimeout, onError) {
   var request = new XMLHttpRequest();
   if (data != '') {
     url = url + "?" + data
