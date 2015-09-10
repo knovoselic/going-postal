@@ -30,11 +30,11 @@
           </div>
           <div class="12u$">
             <label for="ssid">WiFi name (SSID):</label>
-            <input type="text" name="ssid" id="ssid" />
+            <input type="text" name="ssid" id="ssid" value="" />
           </div>
           <div class="12u$">
             <label>WiFi password (leave empty if there's no password):</label>
-            <input type="password" name="password" id="password" />
+            <input type="password" name="password" id="password" value="" />
           </div>
           <div class="12u$ center">
             <ul class="actions">
@@ -55,11 +55,36 @@
       </div>
     </li>
     <li>
+      <h1>Almost done!</h1>
+      <p>
+        Please use Going Postal Android application to <br />
+        associate this devices with your account.
+      </p>
+      <br />
+      <div id="qrCode" class="center"></div>
+      <div class="12u$ center">
+        <ul class="actions">
+          <li><a id="all-done" class="button special">Done</a></li>
+        </ul>
+      </div>
+    </li>
+    <li>
       <h1>All done!</h1>
       <p>Your device is now configured and fully working. It will automatically exit configuration mode.</p>
     </li>
   </ul>
   <script src="index.js"></script>
   <script src="serialize-0.2.min.js"></script>
+  <script src="qrcode.min.js"></script>
+  <script>
+    new QRCode("qrCode", {
+      text: "GPv1.0|8dc36053-d69e-4813-8f8c-afe9c7557071",
+      width: 256,
+      height: 256,
+      colorDark : "#000",
+      colorLight : "#FFF",
+      correctLevel : QRCode.CorrectLevel.H
+    });
+  </script>
 </body>
 </html>

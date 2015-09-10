@@ -111,6 +111,11 @@ ul {
   list-style: none;
 }
 
+#qrCode img {
+  display: inline !important;
+  opacity: 0.5;
+}
+
 /* Box Model */
 
 *,

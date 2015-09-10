@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
   document.forms['wifi']['ssid'].addEventListener('input', validateSSID);
 
   document.getElementById('start-setup').addEventListener('click', nextSlide);
+  document.getElementById('all-done').addEventListener('click', function(){
+    nextSlide();
+    restartESP();
+  });
   /*test connection handler*/
   document.getElementById('test-connection').addEventListener('click', function() {
     event.preventDefault();
@@ -51,7 +55,6 @@ function pingStatus() {
         pingStatus();
       } else {
         nextSlide();
-        restartESP();
       }
     }, wifiErrorHandler, 5000, pingStatus, pingStatus);
   }, 500);
