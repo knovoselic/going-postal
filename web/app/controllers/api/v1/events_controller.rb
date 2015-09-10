@@ -1,6 +1,8 @@
 module Api
   module V1
     class EventsController < BaseController
+      skip_before_action :authenticate_user!
+
       def create
         @device = current_user.devices.find_by key: device_key
         @event = Event.new event_params
