@@ -1,6 +1,8 @@
 #include <pgmspace.h>
 #include <EEPROM.h>
 
+static const String DEVICE_ID = "8dc36053-d69e-4813-8f8c-afe9c7557071";
+
 enum class BootMode
 {
   Configuration = 0,

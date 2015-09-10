@@ -95,6 +95,7 @@ void configurationSetup() {
 
   WiFi.softAPConfig(apIP, apIP, apNetmask);
   WiFi.softAP("GoingPostal configuration");
+  wifi_station_set_reconnect_policy(false);
 
   dnsServer.setTTL(60 * 60);
   dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
@@ -102,9 +103,9 @@ void configurationSetup() {
 
   webServer.onNotFound(handleNotFound);
   webServer.on("/", HTTP_GET, handleIndex);
-  webServer.on("/wifi/config", HTTP_POST, validateWiFiConfig);
-  webServer.on("/wifi/status", HTTP_POST, getWiFiStatus);
-  webServer.on("/restart", HTTP_POST, [](){
+  webServer.on("/wifi/config", HTTP_GET, validateWiFiConfig);
+  webServer.on("/wifi/status", HTTP_GET, getWiFiStatus);
+  webServer.on("/restart", HTTP_GET, [](){
     webServer.send(200, "text/plain", "OK.");
     delay(1000);
     ESP.restart();

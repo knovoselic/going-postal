@@ -25,7 +25,8 @@ short medianValue()
 void sensorSetup() {
   pinMode(13, INPUT);
 
-  WiFi.mode(WIFI_OFF);
+  WiFi.mode(WIFI_STA);
+  wifi_station_disconnect();
 
   Serial.println("Calibrating...");
   short value;
@@ -38,7 +39,7 @@ void sensorSetup() {
     delay(100);
   }
   Serial.println();
-  threshold = medianValue() + 5;
+  threshold = medianValue() + 10;
   Serial.print("Threshold is ");
   Serial.print(threshold);
   Serial.println(".");
@@ -91,7 +92,7 @@ void sensorLoop() {
 
 void sendEmail()
 {
-  WiFi.mode(WIFI_STA);
+  wifi_station_connect();
   Serial.println("Waiting for WiFi...");
   while (WiFi.status() != WL_CONNECTED) {
     delay(250);
@@ -115,6 +116,8 @@ void sendEmail()
 
   }
   client.stop();
-  WiFi.mode(WIFI_OFF);
+  delay(5000);
+  wifi_station_disconnect();
   Serial.println(millis() - start);
+  delay(25000);
 }

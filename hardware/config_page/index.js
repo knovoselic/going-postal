@@ -85,8 +85,10 @@ function previousSlide() {
 
 function ajaxPost(url, data, success, error, timeout, onTimeout, onError) {
   var request = new XMLHttpRequest();
-  request.open('POST', url, true);
-  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+  if (data != '') {
+    url = url + "?" + data
+  }
+  request.open('GET', url, true);
 
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
@@ -108,5 +110,5 @@ function ajaxPost(url, data, success, error, timeout, onTimeout, onError) {
     request.timeout = timeout;
     request.ontimeout = onTimeout;
   }
-  request.send(data);
+  request.send();
 }
