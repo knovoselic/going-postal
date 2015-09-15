@@ -23,7 +23,7 @@ void setup() {
   int bootMode = EEPROM.read(0);
   EEPROM.end();
 
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.setDebugOutput(true);
   Serial.println();
 
