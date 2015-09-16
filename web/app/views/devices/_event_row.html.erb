@@ -3,6 +3,6 @@
     <%= local_time(event.timestamp) %>
   </td>
   <td>
-    <%= event.type %>
+    <%= event.type.to_s.humanize %>
   </td>
 </tr>
