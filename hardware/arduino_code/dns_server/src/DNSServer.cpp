@@ -9,7 +9,7 @@ DNSServer::DNSServer()
 }
 
 bool DNSServer::start(const uint16_t &port, const String &domainName,
-                     const IPAddress &resolvedIP)
+                      const IPAddress &resolvedIP)
 {
   _port = port;
   _domainName = domainName;

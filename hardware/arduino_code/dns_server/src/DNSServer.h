@@ -46,8 +46,8 @@ class DNSServer
 
     // Returns true if successful, false if there are no sockets available
     bool start(const uint16_t &port,
-              const String &domainName,
-              const IPAddress &resolvedIP);
+               const String &domainName,
+               const IPAddress &resolvedIP);
     // stops the DNS server
     void stop();
 
